@@ -1,0 +1,60 @@
+{% extends 'base_generic.html' %} {% load custom_filters %} {% block content %}
+<h2 class="mt-5">販売統計情報</h2>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'top' %}">TOP</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">販売統計情報</li>
+  </ol>
+</nav>
+
+<div class="container">
+  <h3 class="mt-4">累計</h3>
+  <p><font size="5">{{ total_sales }} 円</font></p>
+  <h3 class="mt-4">月別</h3>
+  <div class="table-responsive mt-4">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>月</th>
+          <th>売り上げ</th>
+          <th>内訳</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for year, details in monthly_data %}
+        <tr>
+          <td>{{ year|format_md_tuple }}</td>
+          <td>{{ details.total }}円</td>
+          <td>{{ details.details|format_sales_data }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div>
+      <h3 class="mt-4">日別</h3>
+      <div class="table-responsive mt-4">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>日</th>
+              <th>売り上げ</th>
+              <th>内訳</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for year, details in daily_data %}
+            <tr>
+              <td>{{ year|format_md_tuple }}</td>
+              <td>{{ details.total }}円</td>
+              <td>{{ details.details|format_sales_data }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div>{% endblock %}</div>
+      </div>
+    </div>
+  </div>
+</div>

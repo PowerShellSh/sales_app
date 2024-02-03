@@ -1,0 +1,75 @@
+{% extends 'base_generic.html' %} {% block content %}
+<h2>販売情報管理</h2>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'top' %}">TOP</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">販売情報管理</li>
+  </ol>
+</nav>
+
+<div class="container">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>果物</th>
+          <th>個数</th>
+          <th>売り上げ</th>
+          <th>販売日時</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sale in sales %}
+        <tr>
+          <td>{{ sale.fruit.name }}</td>
+          <td>{{ sale.quantity }}</td>
+          <td>{{ sale.total_amount }}</td>
+          <td>{{ sale.sale_date }}</td>
+          <td>
+            <a href="{% url 'edit_sales' sale.id %}">編集</a>
+            <a href="{% url 'delete_sale' sale.id %}">削除</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if sales.paginator.num_pages > 1 %}
+  <ul class="pagination">
+    {% if sales.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page=1">first</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ sales.previous_page_number }}">previous</a>
+    </li>
+    {% endif %} {% for i in sales.paginator.page_range %}
+    <li class="page-item {% if i == sales.number %}active{% endif %}">
+      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+    </li>
+    {% endfor %} {% if sales.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ sales.next_page_number }}">next</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ sales.paginator.num_pages }}">last</a>
+    </li>
+    {% endif %}
+  </ul>
+  {% endif %}
+
+  <div class="mt-4">
+    <a class="btn btn-outline-primary mb-3 float-right" href="{% url 'add_sales' %}">販売情報登録</a>
+  </div>
+
+  <form method="post" action="{% url 'sales_combined' %}" enctype="multipart/form-data" style="display: flex; align-items: flex-end">
+    {% csrf_token %}
+    <div class="mb-3">{{ form_bulk_sale.as_p }}</div>
+    <button type="submit" class="btn btn-success ml-2">CSV一括アップロード</button>
+  </form>
+</div>
+{% endblock %}

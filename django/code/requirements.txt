@@ -1,0 +1,5 @@
+django==4.2
+mysqlclient==2.1
+pytest==7.4.3
+pytest-django==4.7.0
+freezegun==1.4.0

@@ -1,0 +1,41 @@
+{% extends 'base_generic.html' %} {% block content %}
+<h2>販売情報登録</h2>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'top' %}">TOP</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'sales_combined' %}">販売情報管理</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">販売情報登録</li>
+  </ol>
+</nav>
+
+<div class="container mt-3">
+  <form method="post" action="{% url 'add_sales' %}" enctype="multipart/form-data" class="form">
+    {% csrf_token %} {% for field in form %} {% if field.errors %}
+    <div class="alert alert-danger" role="alert">{{ field.errors|join:', ' }}</div>
+    {% endif %}
+    <div class="form-group">
+      {% if field.label == 'Fruit' %}
+      <label for="{{ field.id_for_label }}">名称:</label>
+      <select class="form-control" name="{{ field.name }}">
+        {% for fruit in form.fruit.field.queryset %}
+        <option value="{{ fruit.pk }}">{{ fruit.name }}</option>
+        {% endfor %}
+      </select>
+      {% elif field.label == 'Quantity' %}
+      <label for="{{ field.id_for_label }}">個数:</label>
+      <input type="text" class="form-control" id="{{ form.quantity.id_for_label }}" name="{{ form.quantity.name }}" />
+      {% elif field.label == 'Sale date' %}
+      <label for="{{ field.id_for_label }}">販売日時:</label>
+      <input type="datetime-local" class="form-control" id="{{ form.sale_date.id_for_label }}" name="{{ form.sale_date.name }}" />
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">登録</button>
+  </form>
+  <a href="{% url 'sales_combined' %}" class="btn btn-secondary mt-3">戻る</a>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base_generic.html' %} {% block content %}
+<h1 class="mt-4">編集</h1>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'top' %}">TOP</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'fruit' %}">果物マスタ管理</a>
+    </li>
+    <div class="breadcrumb-item active" aria-current="page">編集</div>
+  </ol>
+</nav>
+<form method="post" enctype="multipart/form-data" action="{% url 'edit_fruit' pk=fruit_id %}" class="form">
+  {% csrf_token %} {% for field in form %} {% if field.errors %}
+  <div class="alert alert-danger" role="alert">{{ field.errors|join:', ' }}</div>
+  {% endif %}
+  <div class="form-group">
+    {% if field.label == 'Name' %}
+    <label for="{{ field.id_for_label }}">果物:</label>
+    {% elif field.label == 'Price' %}
+    <label for="{{ field.id_for_label }}">単価:</label>
+    {% else %}
+    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+    {% endif %}
+    <input type="text" class="form-control" name="{{ field.name }}" value="{{ field.value }}" />
+  </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">登録</button>
+</form>
+
+<a href="{% url 'fruit' %}" class="btn btn-secondary mt-3">戻る</a>
+{% endblock %}
